@@ -60,7 +60,11 @@ class ModuleMakePanelCommand extends Command
         if (collect($moduleJson['providers'])->filter(
             fn ($provider) => Str::of($provider)->contains('PanelProvider') && ! Str::of($provider)->contains($class)
         )->count()) {
-            $panelPath = $id->prepend('/')->prepend($this->module->getLowerName());
+            if (str_contains($id, 'admin')) {
+                $panelPath = $id->append('/')->append($this->module->getLowerName());
+            } else {
+                $panelPath = $id->prepend('/')->prepend($this->module->getLowerName());
+            }
         }
 
         $this->copyStubToApp('PanelProvider', $path, [

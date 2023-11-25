@@ -53,7 +53,8 @@ class {{ class }} extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->spa();
     }
 
     protected function getModuleNamespace(): string
