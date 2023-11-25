@@ -43,10 +43,12 @@ class ModulesServiceProvider extends PackageServiceProvider
 
                     if (str_contains($title, 'Admin')) {
                         $title = str_replace('Admin', '', $title);
-                        $items[] = NavigationItem::make($title)
-                            ->icon('heroicon-o-puzzle-piece')
-                            ->url(url($panel->getPath()))
-                            ->group('Modules');
+                        if (\Auth::user()?->can('view_module')) {
+                            $items[] = NavigationItem::make($title)
+                                ->icon('heroicon-o-puzzle-piece')
+                                ->url(url($panel->getPath()))
+                                ->group('Modules');
+                        }
                     }
 
                     $panel->navigationItems([
