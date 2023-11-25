@@ -33,7 +33,7 @@ class ModulesServiceProvider extends PackageServiceProvider
     {
         $this->app->register(LaravelModulesServiceProvider::class);
         $this->app->singleton('coolsam-modules', Modules::class);
-        $this->app->afterResolving('filament', function () {
+        $this->app->afterResolving('auth', function () {
             $items = [];
 
             foreach (Filament::getPanels() as $panel) {
