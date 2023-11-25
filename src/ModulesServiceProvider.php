@@ -50,7 +50,7 @@ class ModulesServiceProvider extends PackageServiceProvider
                     }
 
                     $panel->navigationItems([
-                        NavigationItem::make()->label('Main Panel')->icon('heroicon-o-arrow-uturn-left')->url(url(Filament::getDefaultPanel()->getPath()))->sort(-1),
+                        NavigationItem::make()->label('Main Panel')->icon('heroicon-o-arrow-uturn-left')->url(url(Filament::getDefaultPanel()->getPath()))->sort(99),
                     ]);
 
                     $panel->renderHook(
