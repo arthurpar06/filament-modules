@@ -33,14 +33,31 @@ class ModulesServiceProvider extends PackageServiceProvider
     {
         $this->app->register(LaravelModulesServiceProvider::class);
         $this->app->singleton('coolsam-modules', Modules::class);
-        $this->app->afterResolving('auth', function () {
-            $items = [];
-
+        $this->app->afterResolving('filament', function () {
             foreach (Filament::getPanels() as $panel) {
                 $id = \Str::of($panel->getId());
                 if ($id->contains('::')) {
                     $title = $id->replace(['::', '-'], [' ', ' '])->title()->toString();
+                    $title = str_replace('Admin', '', $title);
 
+                    $panel->renderHook(
+                        'panels::sidebar.nav.start',
+                        fn () => new HtmlString("<h2 class='m-2 p-2 font-black text-xl'>$title Module</h2>"),
+                    );
+
+                    $panel->navigationItems([
+                        NavigationItem::make()->label('Main Panel')->icon('heroicon-o-arrow-uturn-left')->url(url(Filament::getDefaultPanel()->getPath()))->sort(99),
+                    ]);
+                }
+            }
+        });
+
+        $this->app->afterResolving('auth', function () {
+            $items = [];
+            foreach (Filament::getPanels() as $panel) {
+                $id = \Str::of($panel->getId());
+                if ($id->contains('::')) {
+                    $title = $id->replace(['::', '-'], [' ', ' '])->title()->toString();
                     if (str_contains($title, 'Admin')) {
                         $title = str_replace('Admin', '', $title);
                         if (\Auth::user()?->can('view_module')) {
@@ -50,20 +67,10 @@ class ModulesServiceProvider extends PackageServiceProvider
                                 ->group('Modules');
                         }
                     }
-
-                    $panel->navigationItems([
-                        NavigationItem::make()->label('Main Panel')->icon('heroicon-o-arrow-uturn-left')->url(url(Filament::getDefaultPanel()->getPath()))->sort(99),
-                    ]);
-
-                    $panel->renderHook(
-                        'panels::sidebar.nav.start',
-                        fn () => new HtmlString("<h2 class='m-2 p-2 font-black text-xl'>$title Module</h2>"),
-                    );
                 }
             }
 
             Filament::getDefaultPanel()->navigationItems($items);
-
         });
 
         return parent::register();
