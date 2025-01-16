@@ -25,7 +25,7 @@ class ModulesServiceProvider extends PackageServiceProvider
             ->hasConfigFile('modules')
             ->hasViews()
             ->hasCommands([
-                ModuleMakePanelCommand::class,
+                // ModuleMakePanelCommand::class,
             ]);
     }
 
